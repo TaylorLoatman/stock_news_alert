@@ -13,9 +13,10 @@ NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 STOCK_API_KEY = os.environ.get("STOCK_API_KEY")
 NEWS_API_KEY = os.environ.get("NEWS_API_KEY")
 SMS_API_KEY = os.environ.get("SMS_API_KEY")
-
 SMS_SID = os.environ.get("SMS_SID")
 
+MY_NUMBER = os.environ.get("MY_NUMBER")
+SND_NUMBER = os.environ.get("SND_NUMBER")
 
 stock_parmas = {
     "function": "TIME_SERIES_DAILY",
@@ -46,18 +47,16 @@ if abs(diff_percent) >= 0:
     news_response = requests.get(NEWS_ENDPOINT, params=news_params)
     news_response.raise_for_status()
     articles = news_response.json()['articles']
-    print(articles)
-    content_list = [articles][:3]
+    content_list = articles[:3]
 
     article_list = [f"Headline: {article['title']}. \nBrief: {article['description']}" for article in content_list]
-    print(article_list)
 
     client = Client(SMS_SID, SMS_API_KEY)
     for article in article_list:
         message = client.messages.create(
             body=article,
-            from_="+15076097388",
-            to="+14703189931"
+            from_=MY_NUMBER,
+            to=SND_NUMBER
             )
 
 
